@@ -1,0 +1,11 @@
+{
+  "name": "jottings-press",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "vitepress": "^1.0.0-alpha.14",
+    "vue": "^3.2.39"
+  }
+}
