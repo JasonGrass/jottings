@@ -5,12 +5,14 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "logseq": "npx zx ./logseq/index.mjs",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:serve": "vitepress serve docs"
   },
   "devDependencies": {
     "vitepress": "^1.0.0-alpha.14",
-    "vue": "^3.2.39"
+    "vue": "^3.2.39",
+    "zx": "^7.0.8"
   }
 }
