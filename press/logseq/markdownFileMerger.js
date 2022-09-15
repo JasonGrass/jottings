@@ -21,12 +21,15 @@ async function mergeMarkdownFiles(fileItems, options) {
     await unlink(targetFile);
   }
 
-  await appendFile(targetFile, `# ${options.title}\r\n`);
+  await appendFile(targetFile, `🍉 ${options.title}\r\n`);
 
   for (item of fileItems) {
     await appendFile(
       targetFile,
-      `\r\n\r\n# ${item.year} 年 ${item.month} 月 ${item.day} 日\r\n`
+      `
+      \r\n---\r\n
+      \r\n🍀 ${item.year} 年 ${item.month} 月 ${item.day} 日 ✏✏✏✏✏✏✏✏✏✏✏✏✏✏✏✏✏\r\n
+      `
     );
 
     const text = await readFile(item.file);
