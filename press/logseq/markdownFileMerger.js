@@ -21,7 +21,7 @@ async function mergeMarkdownFiles(fileItems, options) {
     await unlink(targetFile);
   }
 
-  await appendFile(targetFile, `#${options.title}\r\n`);
+  await appendFile(targetFile, `# ${options.title}\r\n`);
 
   for (item of fileItems) {
     await appendFile(
