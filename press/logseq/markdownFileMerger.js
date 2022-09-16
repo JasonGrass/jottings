@@ -35,6 +35,12 @@ async function mergeMarkdownFiles(fileItems, options) {
     const text = await readFile(item.file);
 
     await appendFile(targetFile, removeTextPrefix(text));
+    await appendFile(
+      targetFile,
+      `
+      \r\n...  \r\n
+      `
+    );
   }
 }
 
@@ -49,7 +55,7 @@ function removeTextPrefix(text) {
     line = _.replace(line, "\t", "  ");
     line = _.trimStart(line, "-");
     line = _.trimEnd(line, "\n");
-    content += `${line}\r\n`;
+    content += `${line}  \r\n`; // 这里要有两个空格，Markdown 是换行
   });
 
   return content;
