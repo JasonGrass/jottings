@@ -31,8 +31,8 @@ async function mergeMarkdownFiles(fileItems, options) {
     await appendFile(
       targetFile,
       `
-      \r\n---\r\n
-      \r\n🍀 ${item.year} 年 ${item.month} 月 ${item.day} 日 ✏✏✏✏✏✏✏✏✏✏✏✏✏✏✏✏✏\r\n
+      \r\n
+      \r\n## 🍀 ${item.year} 年 ${item.month} 月 ${item.day} 日\r\n
       `
     );
 
