@@ -44,7 +44,7 @@ async function mergeMarkdownFiles(fileItems, options) {
     await appendFile(
       targetFile,
       `
-      \r\n...  \r\n
+      \r\n  ...  \r\n
       `
     );
   }
@@ -60,8 +60,14 @@ function removeTextPrefix(text) {
   _.forEach(lines, (line) => {
     line = _.replace(line, "\t", "  ");
     line = _.trimStart(line, "-");
-    line = _.trimEnd(line, "\n");
-    content += `${line}  \r\n`; // 这里要有两个空格，Markdown 是换行
+
+    if (line.trim().startsWith("|") && line.trim().endsWith("|")) {
+      // 表格？维持原样
+      content += `${line}\n`;
+    } else {
+      line = _.trimEnd(line, "\n");
+      content += `${line}  \r\n`; // 这里要有两个空格，Markdown 是换行
+    }
   });
 
   return content;
