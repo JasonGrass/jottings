@@ -1,3 +1,5 @@
+"use strict";
+
 const path = require("path");
 const fs = require("fs");
 const _ = require("lodash");
@@ -7,9 +9,11 @@ const {
   open,
   unlink,
   appendFile,
+  copyFile,
+  mkdir,
 } = require("fs/promises");
 
-const { isFileExisted } = require("./utils/io");
+const { isFolderExisted, isFileExisted } = require("./utils/io");
 
 /**
  * 合并所有的 markdown 文件
@@ -32,7 +36,9 @@ async function mergeMarkdownFiles(fileItems, options) {
       `
     );
 
-    const text = await readFile(item.file);
+    let text = await readFile(item.file);
+    text = removeTextPrefix(text);
+    text = await replacePicture(text, item.file, options.dir);
 
     await appendFile(targetFile, removeTextPrefix(text));
     await appendFile(
@@ -57,6 +63,33 @@ function removeTextPrefix(text) {
     line = _.trimEnd(line, "\n");
     content += `${line}  \r\n`; // 这里要有两个空格，Markdown 是换行
   });
+
+  return content;
+}
+
+/**
+ * 查找并替换文本中的图片引用，并拷贝图片
+ */
+async function replacePicture(content, originFile, targetFolder) {
+  let results = content.matchAll(/!\[.*\](\(.+?\))/g);
+  results = Array.from(results);
+
+  for (let match of results) {
+    const fileRelativePath = _.trimEnd(_.trimStart(match[1].trim(), "("), ")");
+    const dir = path.resolve(originFile, "..");
+    const filePath = path.join(dir, fileRelativePath); // 图片文件
+    const fileName = path.basename(filePath);
+
+    const assertsFolder = path.join(targetFolder, "asserts");
+    if (!(await isFolderExisted(assertsFolder))) {
+      await mkdir(assertsFolder);
+    }
+
+    const targetFile = path.join(assertsFolder, fileName); // 新复制的文件
+    await copyFile(filePath, targetFile);
+
+    content = content.replace(match[1], `(./asserts/${fileName})`);
+  }
 
   return content;
 }

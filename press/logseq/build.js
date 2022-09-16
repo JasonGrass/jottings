@@ -40,7 +40,7 @@ function buildMergeMarkdownFile(group) {
     mergeMarkdownFiles(fileItems, {
       title,
       fileName: `${item.year}${item.month}.md`,
-      dir: ".\\docs\\journals", // 相对于 package.json 所在目录
+      dir /* MD 文件所在的目录*/: ".\\docs\\journals", // 相对于 package.json 所在目录
     });
   });
 }
