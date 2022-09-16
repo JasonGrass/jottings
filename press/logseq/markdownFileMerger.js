@@ -23,7 +23,7 @@ async function mergeMarkdownFiles(fileItems, options) {
 
   await appendFile(targetFile, `🍉 ${options.title}\r\n`);
 
-  for (item of fileItems) {
+  for (let item of fileItems) {
     await appendFile(
       targetFile,
       `
