@@ -12,7 +12,7 @@ const fs = require("fs");
 
 const { asyncFilter } = require("./utils/async");
 const { isFolderExisted } = require("./utils/io");
-const build = require("./build")
+const build = require("./build");
 
 const secretConfig = require("./secret");
 
@@ -27,9 +27,11 @@ const existLogseqPathStandby = await asyncFilter(
 
 if (existLogseqPathStandby.length < 1) {
   console.warn("没有找到任何存在的 logseq 目录");
+  console.log(existLogseqPathStandby);
 } else if (existLogseqPathStandby.length > 1) {
   existLogseqPathStandby.map((f) => console.table(f));
   console.warn("找到多个存在的 logseq 目录");
+  console.log(existLogseqPathStandby);
 } else {
   // existLogseqPathStandby.map((f) => console.table(f));
   await build(existLogseqPathStandby[0]);
