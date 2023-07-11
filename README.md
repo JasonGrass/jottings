@@ -45,3 +45,11 @@ yarn deploy
 
 此命令将指定 `deploy.sh` 中的脚本，将完整流程跑一遍：收集 logseq 数据，静态站点，然后推送到指定的 git 仓库中。
 在 github 上，配置 Pages，以完成静态站点的发布。
+
+## 日常更新
+
+日常在 logseq 中更新内容之后，如果需要发布，则需要在此仓库下运行
+
+```sh
+yarn deploy
+```
