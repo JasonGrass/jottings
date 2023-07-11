@@ -17,7 +17,7 @@ const { isFolderExisted, isFileExisted } = require("./utils/io");
 
 /**
  * 合并所有的 markdown 文件
- * @param {Array} fileItems
+ * @param {Array} fileItems 待合并的 MD 文件列表
  */
 async function mergeMarkdownFiles(fileItems, options) {
   const targetFile = path.join(options.dir, options.fileName);
@@ -25,28 +25,28 @@ async function mergeMarkdownFiles(fileItems, options) {
     await unlink(targetFile);
   }
 
+  // 文件内容：首行
   await appendFile(targetFile, `🍉 ${options.title}\r\n`);
 
+  // 文件内容：复制每一天的 MD 到新 MD 中
   for (let item of fileItems) {
+    // 单日标题
     await appendFile(
       targetFile,
-      `
-      \r\n
-      \r\n## 🍀 ${item.year} 年 ${item.month} 月 ${item.day} 日\r\n
-      `
+      `\r\n\r\n## 🍀 ${item.year} 年 ${item.month} 月 ${item.day} 日\r\n\r\n`
     );
 
     let text = await readFile(item.file);
     text = removeTextPrefix(text);
     text = await replacePicture(text, item.file, options.dir);
+    text = replaceHtmlTag(text);
+    text = removeImageWidthHeight(text);
 
-    await appendFile(targetFile, removeTextPrefix(text));
-    await appendFile(
-      targetFile,
-      `
-      \r\n  ...  \r\n
-      `
-    );
+    // 单日内容
+    await appendFile(targetFile, text);
+
+    // 单日内容结尾
+    await appendFile(targetFile, `\r\n  ...  \r\n`);
   }
 }
 
@@ -61,6 +61,10 @@ function removeTextPrefix(text) {
     line = _.replace(line, "\t", "  ");
     line = _.trimStart(line, "-");
 
+    if (line.trimStart().startsWith("#")) {
+      line = _.trimStart(line, " ");
+    }
+
     if (line.trim().startsWith("|") && line.trim().endsWith("|")) {
       // 表格？维持原样
       content += `${line}\n`;
@@ -71,6 +75,23 @@ function removeTextPrefix(text) {
   });
 
   return content;
+}
+
+/**
+ * 替换 HTML < > 标记
+ *
+ */
+function replaceHtmlTag(text) {
+  return text.replace("<", "&lt;").replace(">", "&gt;");
+}
+
+/**
+ * 移除图片的大小信息
+ * ![image.png](../assets/image_1676630234465_0.png){:height 365, :width 561}
+ * 移除其中的 {:height 365, :width 561}，因为会触发 v-bind is missing expression. 错误
+ */
+function removeImageWidthHeight(text) {
+  return text.replace(/(!\[.+\]\(.+\))(\{:height.+, :width.+\})/g, "$1");
 }
 
 /**

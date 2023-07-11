@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const { readdir } = require("fs/promises");
+const { readdir, writeFile } = require("fs/promises");
 const _ = require("lodash");
 
 const { isFolderExisted } = require("./utils/io");
@@ -17,6 +17,7 @@ async function build(folder) {
 
   let files = await readdir(journalsFolder);
 
+  // 找到所有的 md 文件
   files = files
     .filter((f) => path.extname(f).toLowerCase() == ".md")
     .map((f) => {
@@ -27,26 +28,46 @@ async function build(folder) {
       };
     });
 
+  // 按照 年和月 进行分组
+  /*
+  {
+    "yyyymm":[{
+      year: '2023',
+      month: '07',
+      day: '09',
+      fileName: '2023_07_09.md',
+      file: '...\\LogseqRepo\\jottings\\journals\\2023_07_09.md'
+    }]
+  }
+  */
   const group = classifyFile(files);
   buildMergeMarkdownFile(group);
 }
 
 function buildMergeMarkdownFile(group) {
+  const fileList = [];
+
+  // 合并所有单日的 MD 文件
   _.forEach(group, function (value, key) {
     const title = key;
     const fileItems = value;
-    const item = fileItems[0];
+    const fileName = `${fileItems[0].year}${fileItems[0].month}`;
+    fileList.push(fileName);
 
-    mergeMarkdownFiles(fileItems, {
+    const options = {
       title,
-      fileName: `${item.year}${item.month}.md`,
-      dir /* MD 文件所在的目录*/: ".\\docs\\journals", // 相对于 package.json 所在目录
-    });
+      fileName: `${fileName}.md`,
+      dir /* 目标 MD 文件所在的目录*/: ".\\docs\\journals", // 相对于 package.json 所在目录
+    };
+    mergeMarkdownFiles(fileItems, options);
   });
+
+  // 生成 sidebar.journals.js 文件（提供 sidebar 导航数据）
+  buildSidebarJournals(fileList);
 }
 
 /**
- * 对扫描到的 markdown，安装年月进行分类
+ * 对扫描到的 markdown，按照年月进行分类
  */
 function classifyFile(fileItems) {
   return _.groupBy(fileItems, (item) => {
@@ -64,6 +85,22 @@ function parseFileName(fileName) {
     month: group[1],
     day: group[2],
   };
+}
+
+function buildSidebarJournals(fileList) {
+  const targetFile = path.join(
+    process.cwd(),
+    "docs",
+    ".vitepress",
+    "sidebar.journals.js"
+  );
+  let lines = "export default [\r\n";
+  for (const fileName of fileList) {
+    lines += `{ text: "${fileName}", link: "/journals/${fileName}" },\n`;
+  }
+  lines += "];";
+
+  writeFile(targetFile, lines);
 }
 
 module.exports = build;
