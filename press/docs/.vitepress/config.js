@@ -5,6 +5,7 @@
 import journalsSidebar from "./sidebar.journals";
 
 const config = {
+  lang: "zh-CN",
   base: "/jottings/",
   title: "jottings",
   // description: "Just playing around.",
