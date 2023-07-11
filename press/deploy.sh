@@ -6,6 +6,7 @@ set -e
 rm -rf ./docs/.vitepress/dist
 
 # 生成静态文件
+yarn logseq
 yarn docs:build
 
 # 进入生成的文件夹
