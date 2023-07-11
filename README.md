@@ -1,3 +1,5 @@
+<img src="assets/logo.png" width=64/>
+
 # jottings
 
 ## 简介
