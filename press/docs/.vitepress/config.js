@@ -14,25 +14,25 @@ const config = {
       { text: "journals", link: "/journals/index", activeMatch: "/journals/" },
     ],
     sidebar: {
-        "/journals/": generatorSidebarForJournals(),
-      },
+      "/journals/": generatorSidebarForJournals(),
+    },
+    search: {
+      provider: "local",
+    },
   },
 };
 
 function generatorSidebarForJournals() {
-    return [
-      {
-        text: "README",
-        items: [
-          { text: "README", link: "/journals/index" },
-        ],
-      },
-      {
-        text: "JOURNALS",
-        items: journalsSidebar,
-      },
-    ];
-  }
-
+  return [
+    {
+      text: "README",
+      items: [{ text: "README", link: "/journals/index" }],
+    },
+    {
+      text: "JOURNALS",
+      items: journalsSidebar,
+    },
+  ];
+}
 
 export default config;
