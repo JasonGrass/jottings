@@ -46,7 +46,7 @@ async function mergeMarkdownFiles(fileItems, options) {
     await appendFile(targetFile, text);
 
     // 单日内容结尾
-    await appendFile(targetFile, `\r\n  ...  \r\n`);
+    await appendFile(targetFile, `\r\n\r\n`);
   }
 }
 
