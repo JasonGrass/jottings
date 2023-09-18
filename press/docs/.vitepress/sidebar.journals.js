@@ -13,4 +13,6 @@ export default [
     { text: "202304", link: "/journals/202304" },
     { text: "202306", link: "/journals/202306" },
     { text: "202307", link: "/journals/202307" },
+    { text: "202308", link: "/journals/202308" },
+    { text: "202309", link: "/journals/202309" },
 ];
