@@ -1,0 +1,1 @@
+import{_ as a,c as e,o,V as r}from"./chunks/framework.ccfab03d.js";const p=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"journals/202306.md","filePath":"journals/202306.md"}'),l={name:"journals/202306.md"},t=r("",4),c=[t];function s(n,i,_,d,h,f){return o(),e("div",null,c)}const u=a(l,[["render",s]]);export{p as __pageData,u as default};
